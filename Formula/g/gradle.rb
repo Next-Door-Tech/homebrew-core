@@ -21,14 +21,16 @@ class Gradle < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:   "834067560a7903b2bbd9c686b4830e736157ddbcedeb655a19fb565e735c42de"
   end
 
-  # no java 22 support for gradle 8.7
+  # Please ensure openjdk version is up-to-date when bumping gradle version
   # https://github.com/gradle/gradle/blob/master/platforms/documentation/docs/src/docs/userguide/releases/compatibility.adoc
-  depends_on "openjdk@21"
+  # Also check `env = Language::Java.overridable_java_home_env("<version>")` under `def install`
+  depends_on "openjdk@22"
+  # Note that stanza should probably be updated to `depends_on java:` if/when this becomes functional
 
   def install
     rm_f Dir["bin/*.bat"]
     libexec.install %w[bin docs lib src]
-    env = Language::Java.overridable_java_home_env("21")
+    env = Language::Java.overridable_java_home_env("22")
     (bin/"gradle").write_env_script libexec/"bin/gradle", env
   end
 
